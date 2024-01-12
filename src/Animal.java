@@ -1,37 +1,59 @@
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal {
+    protected int hunger = 0;
+     protected int row = 0;
+     protected int col = 0;
+     private int maxMove = 10; //number of  move in the matrix
+    public static Animal[][] matrix;
+    private int maxDistance;
+    boolean isAlive = true;
+    static int nbAnimalAlive = 0;
+
     abstract void feed();
+
+    public Animal(Animal[][] matrix, int maxDistance) {
+        this.matrix = matrix;
+        this.maxDistance = maxDistance;
+    }
+
 
     void reproduce() {
         System.out.println("Meet another animal of the same species but different sexe");
     }
 
-    abstract void die();
-    private int[][] matrix;
-    private int maxDistance;
-
-    public Animal(int[][] matrix, int maxDistance) {
-        this.matrix = matrix;
-        this.maxDistance = maxDistance;
+    protected static void die(Animal[][] matrix, int currentRow, int currentCol) {
+        // Death logic
+        matrix[currentRow][currentCol] = null;
+        nbAnimalAlive--;
     }
 
-    @Override
+
+
+
+
+
     public void run() {
         while (true) {
             // Randomly select a cell in the matrix
-            int row = ThreadLocalRandom.current().nextInt(matrix.length);
-            int col = ThreadLocalRandom.current().nextInt(matrix[0].length);
-
+             row = ThreadLocalRandom.current().nextInt(matrix.length);
+             col = ThreadLocalRandom.current().nextInt(matrix[0].length);
+            nbAnimalAlive++;
             // Randomly generate a distance within the maximum distance
             int distance = ThreadLocalRandom.current().nextInt(1, maxDistance + 1);
 
             // Move the animal within the matrix
-            move(row, col, distance);
+            for(int i =0; i < maxMove; i++) {
+                move(row, col, distance);
+                feed();
+                reproduce();
+                System.out.println("The number of animal alive is : " + nbAnimalAlive);
+            }
 
             // Sleep for a short duration to simulate time passing between movements
             try {
-                Thread.sleep(1000); // Adjust as needed
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -45,44 +67,47 @@ public abstract class Animal {
         // Adjust the matrix based on the movement
         currentRow = currentRow + distance/2;
         currentCol = currentCol + distance/2;
+        hunger++;
+        if(hunger > 10) {
+            die(matrix, row, col);
+        }
+
     }
 }
 
-}
+
 
 class Carnivores extends Animal {
-    public Carnivores(int[][] matrix, int maxDistance) {
+    public Carnivores(Animal[][] matrix, int maxDistance) {
         super(matrix, maxDistance);
     }
 
+
+
     @Override
     void feed() {
-        System.out.println("Eat herbivores");
+        if (matrix[row][col] instanceof Herbivore) {
+            // Carnivore found a nearby herbivore, "eat" it
+            die(matrix, row, col);
+            hunger = 0; // Reset hunger after eating
+        };
     }
 
 
 
-    @Override
-    void die() {
-        System.out.println("Die from hunger, illness or old age");
-    }
+
 }
 
 class Herbivore extends Animal {
-    public Herbivore(int[][] matrix, int maxDistance) {
+    public Herbivore(Animal[][] matrix, int maxDistance) {
         super(matrix, maxDistance);
     }
 
     @Override
     void feed() {
-        System.out.println("Eat weed");
-    }
-
-
-
-    @Override
-    void die() {
-        System.out.println("");
+        if (matrix[row][col] instanceof Plant) {
+            die(matrix, row, col);
+         }
     }
 
 }

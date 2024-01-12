@@ -8,18 +8,19 @@ public class Main {
     public static void main(String[] args) {
 
 
-                Animal bear = new Bear();
-                Boa boa = new Boa();
-                Animal Boar = new Boar();
-                Animal buffalo = new Buffalo();
-                Animal caterpillar = new Caterpillar();
-                Animal Deer = new Deer();
-                Animal duck = new Duck();
-                Animal fox = new Fox();
-                Animal goat = new Goat();
-                Animal horse = new Horse();
-                Animal mouse = new Mouse();
-                Animal plant = new Plant();
+                Animal bear = new Bear(Animal.matrix, Bear.maxSpeed);
+                Boa boa = new Boa(Animal.matrix, Boa.maxSpeed);
+                Animal boar = new Boar(Animal.matrix, Boar.maxSpeed);
+                Animal buffalo = new Buffalo(Animal.matrix, Buffalo.maxSpeed);
+                Animal caterpillar = new Caterpillar(Animal.matrix, Caterpillar.maxSpeed);
+                Animal deer = new Deer(Animal.matrix, Deer.maxSpeed);
+                Animal duck = new Duck(Animal.matrix, Duck.maxSpeed);
+                Animal fox = new Fox(Animal.matrix, Fox.maxSpeed);
+                Animal goat = new Goat(Animal.matrix, Goat.maxSpeed);
+                Animal horse = new Horse(Animal.matrix, Horse.maxSpeed);
+                Animal mouse = new Mouse(Animal.matrix, Mouse.maxSpeed);
+                Animal plant = new Plant(Animal.matrix, Plant.maxSpeed);
+                Animal wolf = new Wolf(Animal.matrix, Wolf.maxSpeed);
 
                 int numAnimals = 16;
 
@@ -30,29 +31,29 @@ public class Main {
                 ExecutorService executorService = Executors.newFixedThreadPool(numAnimals);
 
                 for (int i = 0; i < numAnimals; i++) {
-                    executorService.execute(matrix, Bear.maxSpeed);
-                    executorService.execute(matrix, Boa.maxSpeed);
-                    executorService.execute(matrix, Boar.maxSpeed);
-                    executorService.execute(matrix, Buffalo.maxSpeed);
-                    executorService.execute(matrix, Caterpillar.maxSpeed);
-                    executorService.execute(matrix, Deer.maxSpeed);
-                    executorService.execute(matrix, Duck.maxSpeed);
-                    executorService.execute(matrix, Fox.maxSpeed);
-                    executorService.execute(matrix, Goat.maxSpeed);
-                    executorService.execute(matrix, Horse.maxSpeed);
-                    executorService.execute(matrix, Mouse.maxSpeed);
-                    executorService.execute(matrix, Plant.maxSpeed);
-                    executorService.execute(matrix, Rabbit.maxSpeed);
-                    executorService.execute(matrix, Sheep.maxSpeed);
-                    executorService.execute(matrix, Wolf.maxSpeed);
+                    executorService.execute((Runnable) bear);
+                    executorService.execute((Runnable) boa);
+                    executorService.execute((Runnable) boar);
+                    executorService.execute((Runnable) buffalo);
+                    executorService.execute((Runnable) caterpillar);
+                    executorService.execute((Runnable) deer);
+                    executorService.execute((Runnable) duck);
+                    executorService.execute((Runnable)fox);
+                    executorService.execute((Runnable)goat);
+                    executorService.execute((Runnable)horse);
+                    executorService.execute((Runnable)mouse);
+                    executorService.execute((Runnable) plant);
+
+
+                    executorService.execute((Runnable) wolf);
                 }
 
                 // Shutdown the executor when all tasks are submitted
                 executorService.shutdown();
-            }
 
 
-        }
+
+
 
 
     }
